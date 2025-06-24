@@ -13,7 +13,6 @@ cookies = {
     'session': os.getenv('SESSION'),
 }
 
-
 ###### GET CHALLENGES ######
 challenges_url = f'{url}/api/v1/challenges'
 response = requests.get(challenges_url, headers=headers, cookies=cookies)

@@ -130,6 +130,8 @@ celerybeat.pid
 # Environments
 .env
 .env.redteam
+.env.blueteam
+.env.vhc
 .venv
 env/
 venv/
