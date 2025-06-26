@@ -1,3 +1,13 @@
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.7%2B-blue?logo=python&logoColor=white">
+  <img alt="License" src="https://img.shields.io/github/license/ha1fdan/CTFdScraper?color=blueviolet">
+  <img alt="Stars" src="https://img.shields.io/github/stars/ha1fdan/CTFdScraper?style=social">
+  <img alt="Last Commit" src="https://img.shields.io/github/last-commit/ha1fdan/CTFdScraper">
+  <img alt="Issues" src="https://img.shields.io/github/issues/ha1fdan/CTFdScraper">
+<img alt="PRs" src="https://img.shields.io/github/issues-pr/ha1fdan/CTFdScraper">
+</p>
+
+
 # 🕵️‍♂️ CTFd Challenge main
 
 A simple Python 3 tool to automatically download challenges and files from any CTFd instance.
