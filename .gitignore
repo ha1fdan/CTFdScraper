@@ -196,4 +196,7 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+
+# CUSTOM
 output/
+.idea
