@@ -14,7 +14,7 @@ Supports:
 
 ```bash
 # Clone the repo
-git clone github.com/ha1fdan/CTFdScraper.git
+git clone https://github.com/ha1fdan/CTFdScraper.git
 cd CTFdScraper
 
 # Set up a virtual environment (optional but recommended)
