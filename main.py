@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 if os.path.exists('.env'):
     load_dotenv()
     if os.getenv('SESSION') and os.getenv('URL'):
+        url = os.getenv('URL', 'https://icoblue2025.ctfd.io').rstrip('/')
         print("[+] Using session cookie from .env file")
         cookies = {
             'session': os.getenv('SESSION'),
