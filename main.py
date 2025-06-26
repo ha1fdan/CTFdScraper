@@ -37,6 +37,8 @@ else:
     parser.add_argument("--password", help="CTFd password")
     parser.add_argument("--session", help="Session cookie for CTFd")
     parser.add_argument("--url", default="https://icoblue2025.ctfd.io", help="Base URL of the CTFd instance")
+    parser.add_argument("--nofiles", default=False, help="Skip downloading files, only download challenge descriptions")
+    parser.add_argument("--nooverwrite", default=False, help="Skip overwriting existing files")
     args = parser.parse_args()
 
     url = args.url.rstrip("/")
@@ -96,20 +98,29 @@ for challenge in challenges:
         
     ### Make description.md file
     description_path = os.path.join(path, "description.md")
-    with open(description_path, "w") as desc_file:
-        desc_file.write(f"# {chall_data['name']}\n\n")
-        desc_file.write(f"## Description\n{chall_data['description']}\n\n")
-        desc_file.write(f"## Category\n{chall_data['category']}\n\n")
-        desc_file.write(f"## Points\n{chall_data['value']}\n\n")
+    if os.path.exists(description_path) and False: #args.nooverwrite
+        print(f"[-] Description file already exists for challenge {challenge['name']}. Use --nooverwrite to skip this check.")
+        continue
+    else:
+        with open(description_path, "w") as desc_file:
+            desc_file.write(f"# {chall_data['name']}\n\n")
+            desc_file.write(f"## Description\n{chall_data['description']}\n\n")
+            desc_file.write(f"## Category\n{chall_data['category']}\n\n")
+            desc_file.write(f"## Points\n{chall_data['value']}\n\n")
+            print(f"[+] Created description file for challenge {challenge['name']} at {description_path}")
     
-    for file in chall_data['files']:
-        file_data = requests.get(f"{url}{file}", headers=headers, cookies=cookies)
-        if file_data.status_code == 200:
-            file_name = os.path.basename(file.split('?')[0])
-            file_path = os.path.join(path, file_name)
-            with open(file_path, 'wb') as f:
-                f.write(file_data.content)
-            print(f"[+] Downloaded {file_name} for challenge {challenge['name']}.")
-        else:
-            print(f"[-] Failed to download {file} for challenge {challenge['name']}: {file_data.status_code} - {file_data.text}")
-            continue
+    if False: #args.nofiles
+        print(f"[-] Skipping file downloads for challenge {challenge['name']} as --nofiles is set.")
+        continue
+    else:
+        for file in chall_data['files']:
+            file_data = requests.get(f"{url}{file}", headers=headers, cookies=cookies)
+            if file_data.status_code == 200:
+                file_name = os.path.basename(file.split('?')[0])
+                file_path = os.path.join(path, file_name)
+                with open(file_path, 'wb') as f:
+                    f.write(file_data.content)
+                print(f"[+] Downloaded {file_name} for challenge {challenge['name']}.")
+            else:
+                print(f"[-] Failed to download {file} for challenge {challenge['name']}: {file_data.status_code} - {file_data.text}")
+                continue
