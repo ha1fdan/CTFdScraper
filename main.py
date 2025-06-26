@@ -72,21 +72,20 @@ challenges_url = f'{url}/api/v1/challenges'
 response = requests.get(challenges_url, headers=headers, cookies=cookies)
 if response.status_code == 200:
     challenges = response.json()['data']
-    print("Challenges retrieved successfully.")
+    print("[+] Challenges retrieved successfully.")
 else:
     if response.status_code == 403:
-        print(response.text)
-        print("Access forbidden. Challenges may not be available yet or your session may have expired.")
+        print(f"[-] Access forbidden. ERROR: {response.json()['message']}")
         sys.exit(1)
     else:
-        print(f"Failed to retrieve challenges: {response.status_code} - {response.text}")
+        print(f"[-] Failed to retrieve challenges: {response.status_code} - {response.text}")
         sys.exit(1)
 
 ###### GET FILES AND DOWNLOAD ######
 for challenge in challenges:
     chall_data = requests.get(f"{url}/api/v1/challenges/{challenge['id']}", cookies=cookies, headers=headers)
     if chall_data.status_code != 200:
-        print(f"Failed to retrieve challenge data for {challenge['id']}: {chall_data.status_code} - {chall_data.text}")
+        print(f"[-] Failed to retrieve challenge data for {challenge['id']}: {chall_data.status_code} - {chall_data.text}")
         continue
     
     chall_data = chall_data.json()['data']
@@ -110,7 +109,7 @@ for challenge in challenges:
             file_path = os.path.join(path, file_name)
             with open(file_path, 'wb') as f:
                 f.write(file_data.content)
-            print(f"Downloaded {file_name} for challenge {challenge['name']}.")
+            print(f"[+] Downloaded {file_name} for challenge {challenge['name']}.")
         else:
-            print(f"Failed to download {file} for challenge {challenge['name']}: {file_data.status_code} - {file_data.text}")
+            print(f"[-] Failed to download {file} for challenge {challenge['name']}: {file_data.status_code} - {file_data.text}")
             continue
