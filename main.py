@@ -1,42 +1,65 @@
 import os
 from dotenv import load_dotenv
-load_dotenv()
 import requests
 import argparse
 import sys
 import os
 from bs4 import BeautifulSoup
 
-# Command-line argument parsing
-parser = argparse.ArgumentParser(description="CTFd Scraper - Download challenges and files")
-parser.add_argument("--username", help="CTFd username")
-parser.add_argument("--password", help="CTFd password")
-parser.add_argument("--session", help="Session cookie for CTFd")
-parser.add_argument("--url", default="https://icoblue2025.ctfd.io", help="Base URL of the CTFd instance")
-args = parser.parse_args()
-
-url = args.url.rstrip("/")
-
-# If session cookie is provided, use it directly
-if args.session:
-    print("[+] Using session cookie")
-    cookies = {
-        'session': args.session,
-    }
-else:
-    # Require username and password if session is not provided
-    if not args.username or not args.password:
-        print("[-] Either --session or both --username and --password are required.")
-        exit(1)
-    else:
+# Use .env file for environment variables if available
+if os.path.exists('.env'):
+    load_dotenv()
+    if os.getenv('SESSION') and os.getenv('URL'):
+        print("[+] Using session cookie from .env file")
+        cookies = {
+            'session': os.getenv('SESSION'),
+        }
+    elif os.getenv('USERNAME') and os.getenv('PASSWORD') and os.getenv('URL'):
+        print("[+] Using username and password from .env file")
+        url = os.getenv('URL', 'https://icoblue2025.ctfd.io').rstrip('/')
+        
         login_url = f"{url}/login"
         session = requests.Session()
         login_page = session.get(login_url)
         soup = BeautifulSoup(login_page.text, "html.parser")
         nonce = soup.find("input", {"name": "nonce"})["value"]
-        data = {"name": args.username,"password": args.password,"nonce": nonce}
+        data = {"name": os.getenv('USERNAME'),"password": os.getenv('PASSWORD'),"nonce": nonce}
         response = session.post(login_url, data=data, headers={"Content-Type": "application/x-www-form-urlencoded"}, allow_redirects=False)
         cookies = session.cookies.get_dict()
+    else:
+        print("[-] Either SESSION or both USERNAME and PASSWORD must be set in the .env file. URL is also required.")
+        exit(1)
+else:
+    # Command-line argument parsing
+    parser = argparse.ArgumentParser(description="CTFd Scraper - Download challenges and files")
+    parser.add_argument("--username", help="CTFd username")
+    parser.add_argument("--password", help="CTFd password")
+    parser.add_argument("--session", help="Session cookie for CTFd")
+    parser.add_argument("--url", default="https://icoblue2025.ctfd.io", help="Base URL of the CTFd instance")
+    args = parser.parse_args()
+
+    url = args.url.rstrip("/")
+
+    # If session cookie is provided, use it directly
+    if args.session:
+        print("[+] Using session cookie")
+        cookies = {
+            'session': args.session,
+        }
+    else:
+        # Require username and password if session is not provided
+        if not args.username or not args.password:
+            print("[-] Either --session or both --username and --password are required.")
+            exit(1)
+        else:
+            login_url = f"{url}/login"
+            session = requests.Session()
+            login_page = session.get(login_url)
+            soup = BeautifulSoup(login_page.text, "html.parser")
+            nonce = soup.find("input", {"name": "nonce"})["value"]
+            data = {"name": args.username,"password": args.password,"nonce": nonce}
+            response = session.post(login_url, data=data, headers={"Content-Type": "application/x-www-form-urlencoded"}, allow_redirects=False)
+            cookies = session.cookies.get_dict()
 
 headers = {
     'Content-Type': 'application/json',
