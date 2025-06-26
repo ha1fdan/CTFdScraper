@@ -64,7 +64,7 @@ else:
 
 headers = {
     'Content-Type': 'application/json',
-    'User-Agent': 'Mozilla/5.0 (X11; TempleOS x86_32; rv:139.0) Gecko/20100101 Firefox/139.0'
+    'User-Agent': 'Mozilla/6.9 (X11; TempleOS x86_32; rv:139.0) Gecko/20100101 Firefox/139.0'
 }
 
 ###### GET CHALLENGES ######
