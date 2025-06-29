@@ -8,7 +8,7 @@
 </p>
 
 
-# 🕵️‍♂️ CTFd Challenge main
+# 🕵️‍♂️ CTFd Challenge
 
 A simple Python 3 tool to automatically download challenges and files from any CTFd instance.
 
