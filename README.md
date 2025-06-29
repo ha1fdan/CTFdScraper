@@ -8,7 +8,7 @@
 </p>
 
 
-# 🕵️‍♂️ CTFd Challenge
+# 🕵️‍♂️ CTFd Challenge Scraper
 
 A simple Python 3 tool to automatically download challenges and files from any CTFd instance.
 
